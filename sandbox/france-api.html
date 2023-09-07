@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API</title>
+</head>
+<body>
+  <p>
+    Objectif : afficher les régions de France, 
+    et lorsque je clique sur une region, 
+    j'affiche à côté les départements de cette région.
+    
+    Le tout sans recharger la page.
+
+    On va aller chercher les données sur l'API https://geo.api.gouv.fr/regions et les afficher dynamiquement dans ma page !
+  </p>
+
+  <div style="display: flex;">
+    <ul id="region-list">
+      <!-- .... Ici on insert les régions -->
+    </ul>
+  
+    <ul id="department-list">
+      <!-- ... Ici on insert les départements -->
+    </ul>
+  </div>
+
+</body>
+
+<script>
+  // Notre code JS ici
+
+  async function fetchRegions() {
+    const regionURL = "https://geo.api.gouv.fr/regions";
+    const httpResponse = await fetch(regionURL);
+    const regions = await httpResponse.json(); // [{}, {}, {}]
+
+    for (const region of regions) { // Pour chaque région : 
+      console.log(region); // { nom: "", code: "" }
+
+      // On crée le LI
+      const liElement = document.createElement("li"); // - on créé un LI
+      liElement.textContent = region.nom; // - on change son textContent
+
+      // On écoute le click sur le LI
+      // En cas de click, on va chercher les départements de cette région
+      liElement.addEventListener("click", async () => {
+        const departmentURL = `https://geo.api.gouv.fr/regions/${region.code}/departements`;
+        const departmentResponse = await fetch(departmentURL);
+        const departments = await departmentResponse.json();
+
+        const departmentsListElement = document.querySelector("#department-list");
+        departmentsListElement.innerHTML = "";
+
+        for (const department of departments) {
+          const departmentLiElement = document.createElement("li");
+          departmentLiElement.textContent = department.nom;
+          departmentsListElement.appendChild(departmentLiElement);
+
+          // departmentsListElement.insertAdjacentHTML("beforeend", `<li>${department.nom}</li>`); // Alternative. Attentions aux injections de code malveillant quand vous ne controllez pas l'API
+        }
+      });
+
+      // On insère dans le DOM
+      const ulElement = document.querySelector("#region-list"); // - on récupère le UL (document.querySelector)
+      ulElement.appendChild(liElement); // - on appendChild
+    }
+  }
+
+  fetchRegions();
+
+</script>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okanban</title>
+</head>
+<body>
+    <h1>Bienvenue sur Okanban</h1>
+
+    <!-- Insérer les listes -->
+    <ul id="lists"></ul>
+
+    <script>
+        // Code qui va chercher les listes sur notre API et les insérer dans le DOM
+        fetchAndDisplayLists();
+
+        async function fetchAndDisplayLists() {
+            const httpReponse = await fetch("http://localhost:3000/lists");
+            const lists = await httpReponse.json();
+
+            const ulElement = document.querySelector("#lists");
+
+            for (const list of lists) {
+                // ulElement.insertAdjacentHTML("beforeend", `<li>${list.name}</li>`);
+                const li = document.createElement("li");
+                li.textContent = list.name; // On protège le client avec un textContent au lieu d'un innerHTML
+                ulElement.appendChild(li);
+            }
+        }
+    </script>
+</body>
+</html>
