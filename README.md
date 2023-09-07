@@ -23,7 +23,7 @@ Okanban est une application de gestion de tâches de style Trello. Elle permet a
 1. **Clonez le dépôt** :
 
    ```bash
-   git clone https://github.com/O-clock-Maya/S06-okanban-RED-enzoclock.git
+   git clone https://github.com/MickaelMallet/O-Kanban.git
    cd Okanban
    ```
 
